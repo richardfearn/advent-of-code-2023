@@ -15,8 +15,8 @@ def part_1_predict(history):
     sequences = [history]
     while set(sequences[-1]) != {0}:
         sequences.append(next_sequence(sequences[-1]))
-    for i in range(len(sequences) - 1, 0, -1):
-        sequences[i - 1].append(sequences[i - 1][-1] + sequences[i][-1])
+    for lower, upper in pairwise(reversed(sequences)):
+        upper.append(upper[-1] + lower[-1])
     return sequences[0][-1]
 
 
@@ -24,8 +24,8 @@ def part_2_predict(history):
     sequences = [history]
     while set(sequences[-1]) != {0}:
         sequences.append(next_sequence(sequences[-1]))
-    for i in range(len(sequences) - 1, 0, -1):
-        sequences[i - 1].insert(0, sequences[i - 1][0] - sequences[i][0])
+    for lower, upper in pairwise(reversed(sequences)):
+        upper.insert(0, upper[0] - lower[0])
     return sequences[0][0]
 
 
