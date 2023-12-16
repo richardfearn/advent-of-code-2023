@@ -1,3 +1,6 @@
+from collections import OrderedDict
+
+
 def part_1_answer(line):
     return sum(calculate_hash(step) for step in line.split(","))
 
@@ -13,7 +16,7 @@ def calculate_hash(s):
 
 
 def part_2_answer(line):
-    boxes = [[] for _ in range(256)]
+    boxes = [OrderedDict() for _ in range(256)]
     apply_steps(boxes, line.split(","))
     return total_focusing_power(boxes)
 
@@ -29,27 +32,16 @@ def apply_steps(boxes, steps):
 
         box = boxes[calculate_hash(label)]
 
-        label_index = None
-        for i, item in enumerate(box):
-            if item[0] == label:
-                label_index = i
-                break
-
         if new_value is None:
-            if label_index is not None:
-                box.pop(label_index)
+            box.pop(label, None)
         else:
-            new_item = (label, new_value)
-            if label_index is not None:
-                box[label_index] = new_item
-            else:
-                box.append(new_item)
+            box[label] = new_value
 
 
 def total_focusing_power(boxes):
     total = 0
     for box_num, box in enumerate(boxes):
-        for slot_num, (_, focal_length) in enumerate(box):
+        for slot_num, (_, focal_length) in enumerate(box.items()):
             focusing_power = (1 + box_num) * (slot_num + 1) * focal_length
             total += focusing_power
     return total
